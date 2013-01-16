@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Plan proposal for testing the Open Web Platform</title>
+    
+    
+    
+  <style>/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #ff4500;
+}
+
+
+/* --- --- */
+ol.algorithm { counter-reset:numsection; list-style-type: none; }
+ol.algorithm li { margin: 0.5em 0; }
+ol.algorithm li:before { font-weight: bold; counter-increment: numsection; content: counters(numsection, ".") ") "; }
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+</style><link rel="stylesheet" href="http://www.w3.org/StyleSheets/TR/w3c-unofficial"><!--[if lt IE 9]><script src='http://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--></head>
+  <body style="width: 43em;"><div class="head">
+  <p>
+    
+  </p>
+  <h1 class="title" id="title">Plan proposal for testing the Open Web Platform</h1>
+  
+  <h2 id="unofficial-draft-16-january-2013">Unofficial Draft 16 January 2013</h2>
+  <dl>
+    
+    
+    
+    
+    
+    
+    
+    <dt>Editor:</dt>
+    <dd><span>Tobie Langel</span></dd>
+
+    
+  </dl>
+  
+  
+  
+  
+    
+      
+        <p class="copyright">
+          This document is licensed under a 
+          <a class="subfoot" href="http://creativecommons.org/licenses/by/3.0/" rel="license">Creative Commons 
+          Attribution 3.0 License</a>.
+        </p>
+      
+    
+  
+  <hr>
+</div><section id="abstract" class="introductory"><h2>Abstract</h2><p>This document look at the current state of testing of the Open Web Platform and suggests a three step plan to handle the current backlog, build a solid testing infrastructure and finally develop this activity beyond strict conformance testing as increasingly requested by W3C members.
+</p></section><section id="sotd" class="introductory"><h2>Status of This Document</h2>
+  
+    <p>
+      This document is merely a public working draft of a potential specification. It has
+      no official standing of any kind and does not represent the support or consensus of any
+      standards organisation.
+    </p>
+    
+  
+</section><section id="toc"><h2 class="introductory">Table of Contents</h2><ul class="toc"><li class="tocline"><a href="#introduction" class="tocxref"><span class="secno">1. </span>Introduction</a></li><li class="tocline"><a href="#current-challenges" class="tocxref"><span class="secno">2. </span>Current challenges</a></li><li class="tocline"><a href="#proposal" class="tocxref"><span class="secno">3. </span>Proposal</a><ul class="toc"><li class="tocline"><a href="#methodology" class="tocxref"><span class="secno">3.1 </span>Methodology</a></li><li class="tocline"><a href="#fight-fires" class="tocxref"><span class="secno">3.2 </span>Fight fires</a></li><li class="tocline"><a href="#build-a-solid-infrastructure" class="tocxref"><span class="secno">3.3 </span>Build a solid infrastructure</a><ul class="toc"><li class="tocline"><a href="#transition-test-repositories-to-github" class="tocxref"><span class="secno">3.3.1 </span>Transition test repositories to GitHub</a></li><li class="tocline"><a href="#create-a-centralized-resource" class="tocxref"><span class="secno">3.3.2 </span>Create a centralized resource</a></li><li class="tocline"><a href="#streamline-processes" class="tocxref"><span class="secno">3.3.3 </span>Streamline processes</a></li></ul></li><li class="tocline"><a href="#expand-the-testing-surface-area" class="tocxref"><span class="secno">3.4 </span>Expand the testing surface area</a><ul class="toc"><li class="tocline"><a href="#some-related-long-er-term-projects" class="tocxref"><span class="secno">3.4.1 </span>Some related long(er) term projects</a></li></ul></li></ul></li><li class="tocline"><a href="#stakeholders" class="tocxref"><span class="secno">A. </span>Stakeholders</a><ul class="toc"><li class="tocline"><a href="#implementors" class="tocxref"><span class="secno">A.1 </span>Implementors</a></li><li class="tocline"><a href="#hardware-manufacturers" class="tocxref"><span class="secno">A.2 </span>Hardware manufacturers</a></li><li class="tocline"><a href="#operators" class="tocxref"><span class="secno">A.3 </span>Operators</a></li><li class="tocline"><a href="#developers-aka-authors" class="tocxref"><span class="secno">A.4 </span>Developers (aka Authors)</a></li><li class="tocline"><a href="#w3c-groups" class="tocxref"><span class="secno">A.5 </span>W3C Groups</a></li><li class="tocline"><a href="#open-source-projects-test-suites-etc." class="tocxref"><span class="secno">A.6 </span>Open-source projects, test suites, etc.</a></li><li class="tocline"><a href="#different-industry-segments" class="tocxref"><span class="secno">A.7 </span>Different industry segments</a></li><li class="tocline"><a href="#end-users" class="tocxref"><span class="secno">A.8 </span>End users</a></li></ul></li></ul></section><section id="introduction"><!--OddPage--><h2><span class="secno">1. </span>Introduction</h2><p>There are a number of factors driving the need for a broad testing effort of the Open Web Platform. First, with the HTML WG is approaching completion of the HTML5 spec and will need to prove interoperability to move to rec. This will require the development of a large test suite.
+
+</p><p>Secondly, the platform has dramatically increased in complexity as it shifted from being strictly a document exchange platform to becoming a fully applicative one. Keeping the different implementations interoperable will also require a concerted testing effort.
+
+</p><p>Thirdly, as the scope of the platform broadens so does the number and diversity of its stakeholders (mobile, automotive, TV, developers, etc.), which have increasingly pressing demands to push testing further and into areas which bring them more value.
+
+</p><p>There is a need to organize the testing effort to understand, prioritize, and find resources to meet those different requirements. This document attempts to do so by looking at the <a href="#current-challenges">current challenges</a> and proposing a <a href="#proposal">three step plan</a>. It also looks briefly at some of the key stakeholders and their requirements in <a href="#stakeholders">Appendix A</a>.
+
+</p></section><section id="current-challenges"><!--OddPage--><h2><span class="secno">2. </span>Current challenges</h2><p>The testing effort faces the following challenges:
+
+</p><ol>
+<li>A large but unquantified backlog of tests to write.</li>
+<li>Little visibility into the quality and coverage of existing tests.</li>
+<li>Difficulty to obtain dedicated resources from W3C members due to the aforementioned lack of visibility.</li>
+<li>Little to no cross-WG processes, documentation and tools for testing.</li>
+<li>Difficulty to obtain outside help (e.g. from long-tail developers) due to lack of organization and infrastructure.</li>
+<li>Diverse and mainly undocumented requirements coming from various stakeholders.</li>
+</ol></section><section id="proposal"><!--OddPage--><h2><span class="secno">3. </span>Proposal</h2><p>Given the challenges exposed above we propose a three step strategy:
+
+</p><ol>
+<li><a href="#fight-fires">Fight fires</a>: Organize an effort to prioritize and handle the backlog of tests for specific specifications, focusing strictly on conformance testing and areas where interoperability hasn't already been proven.</li>
+<li><a href="#build-a-solid-infrastructure">Build a solid infrastructure</a>: In parallel to firefighting, develop adequate processes, tools and documentation to enable unified and sustainable testing practices across Working Groups.</li>
+<li>Finally, research stakeholder requirements to <a href="#expand-the-testing-surface-area">expand the testing surface area</a> to include QoI, performance, regression testing, and provide as much value as possible.</li>
+</ol><section id="methodology"><h3><span class="secno">3.1 </span>Methodology</h3><p>To be successful, this strategy has to be:
+
+</p><ul>
+<li>data driven (to be effective and measurable),</li>
+<li>agile (releasing early and often),</li>
+<li>inclusive (considering the needs of all stakeholders),</li>
+<li>well communicated (to gather support and resources), and</li>
+<li>provide value to win support of important stakeholders (WG members notably).</li>
+</ul></section><section id="fight-fires"><h3><span class="secno">3.2 </span>Fight fires</h3><p>Coordinate with high stake activities such as that of the HTML WG to enable timely delivery of required test suites to move target specs to rec. Ideally, piggy-back on some of the infrastructure developed in parallel, but more often then not, the best options will be to use temporary solutions in order to meet deadlines.
+
+</p><p>The fact that this project is time boxed doesn't mean it shouldn't take the time to gather necessary data and metrics in order to precisely define goals and measure progress.
+
+</p><ul>
+<li>Assess immediate testing requirements (notably in relationship to <a href="http://dev.w3.org/html5/decision-policy/html5-2014-plan.html">Plan 2014</a>.)</li>
+<li>Assess test coverage of chosen areas.</li>
+<li>Attempt to reuse existing tests:<ul>
+<li>Find existing test suites (vendors, operators, etc.),</li>
+<li>Help convert existing test suites to testharness.js,</li>
+<li>Help write shims for testharness.js</li>
+</ul>
+</li>
+<li>Centralize and organize the testing effort:<ul>
+<li>build a database of tests which need to be written,</li>
+<li>have test writers sign-up,</li>
+<li>assign deadlines,</li>
+<li>eventually out-source development of specific areas,</li>
+<li>coordinate with efforts such as <a href="http://testthewebforward.org/">Test the Web Forward</a>.</li>
+</ul>
+</li>
+<li>Report progress early and often.</li>
+</ul><p>To be successful this project has to be data driven.
+
+</p><ul>
+<li>Define and refine metrics to measuring test coverage.</li>
+<li>Expose data much like <a href="http://arewefirstyet.com/">arewefirstyet.com</a> or <a href="http://arewefastyet.com/">arewefastyet.com</a>.</li>
+<li>Experiment with extracting test coverage info from specs (e.g. through adding specific markup for algorithms in ReSpec).</li>
+</ul></section><section id="build-a-solid-infrastructure"><h3><span class="secno">3.3 </span>Build a solid infrastructure</h3><p>In parallel, develop adequate processes, tools and documentation to enable unified and sustainable testing practices across Working Groups.
+
+</p><p>The main idea here is that W3C should be the purveyor of the infrastructure and W3C members and developers should be authoring tests and reviewing them. Of course, when and where necessary, W3C could dispatch dedicated resources to author and review tests, but that should remain an exception.
+
+</p><section id="transition-test-repositories-to-github"><h4><span class="secno">3.3.1 </span>Transition test repositories to GitHub</h4><ul>
+<li>Explain and advocate the benefits of building on top of GitHub (much better tooling, cost effectiveness, high visibility, ability to tap into the developer pool for test writing, W3C image, etc.).</li>
+<li>Develop a tool to simplify the process of creating and linking GitHub accounts to W3C accounts.</li>
+<li>Convert skeptics by providing added value (eg. simplified and documented test review.).</li>
+<li>Set up replication of repositories to W3C servers.</li>
+<li>Set up archiving of comments, code reviews, etc. through <a href="http://developer.github.com/v3/activity/events/types/">GitHub's API</a> or <a href="http://www.githubarchive.org/">GitHub Archive</a>.</li>
+<li>Define and document processes to work with GitHub.</li>
+<li>Transition all test repositories to github.com/w3c.</li>
+<li>Help transition specific WG to GitHub (e.g. CSSWG with Sheperd) by providing assistance and allocating development resources.</li>
+</ul></section><section id="create-a-centralized-resource"><h4><span class="secno">3.3.2 </span>Create a centralized resource</h4><p>There needs to be a centralized resource for all test-related activities at W3C. This should be a properly designed, branded and referenced website centered around three key activities:
+
+</p><ul>
+<li>writing tests,</li>
+<li>running tests, and</li>
+<li>consuming test results.</li>
+</ul><p>This website would:
+
+</p><ol>
+<li><p>expose and provide APIs to:</p>
+<ul>
+<li>sign-up to write test for specific specs (or part of specs),</li>
+<li>run tests and collect their results,</li>
+<li>download and run tests on a private server,</li>
+<li>view and download test results of different user agents,</li>
+<li>view current test coverage and other useful data points.</li>
+</ul>
+</li>
+<li><p>Host all test related documentation for:</p>
+<ul>
+<li>specific W3C testing tools such as testharness.js,</li>
+<li>the APIs,</li>
+<li>process for submitting, licensing and reviewing tests.</li>
+</ul>
+</li>
+<li><p>Incentivize test authors and reviewers by showcasing them and gamification.</p>
+</li>
+<li><p>Integrate with specification to include test coverage info and implementation support directly into specs (e.g. using a similar architecture as <a href="http://andismith.github.com/caniuse-widget/">caniuse widgets</a>).</p>
+</li>
+</ol><p>It could re-use existing infrastructure in parts or in whole.
+
+</p></section><section id="streamline-processes"><h4><span class="secno">3.3.3 </span>Streamline processes</h4><ol>
+<li><p>Test-writing process</p>
+<ul>
+<li>Allow test writers to claim specs (or spec sections) they want to work on via online tool.</li>
+<li>Test writer simply forks test repo on GitHub, and sends a pull requests when done.</li>
+<li><a href="https://github.com/blog/1227-commit-status-api">Commit status</a> checks the CLA has been properly filled in.</li>
+<li>Tests get reviewed using GitHub's review tool (and data is collected on how fast that process is).</li>
+<li>Note for some tests (e.g.: xhr) a server might be required. This would have too be provided.</li>
+</ul>
+</li>
+<li><p>Review process</p>
+<p> This is critical. Contributions that aren't quickly reviewed dis-incentivize test writers, give the impression of stalled projects, etc.</p>
+<ul>
+<li>Use GitHub review tools.</li>
+<li>Incentivize reviewers.</li>
+<li>organize it by establishing and documenting precise review criteria.</li>
+<li>Ask WG to provide for test reviewers per spec much like they provide editors.</li>
+<li>Have test reviewers mentioned on spec below editors.</li>
+<li>Work with reviewers to make their work easier.</li>
+</ul>
+</li>
+</ol></section></section><section id="expand-the-testing-surface-area"><h3><span class="secno">3.4 </span>Expand the testing surface area</h3><p>Multiple stakeholders have expressed requirements around testing that go beyond what is currently needed to move a spec on the rec track. Researching and identifying these requirements will imply involving stakeholders, either through 1:1 conversations, the organization of a workshop, a community group, or by collecting feedback through different channels, etc.
+Main areas of focus seem to be for now Quality of Implementation testing, regression testing, and benchmarking.
+
+</p><section id="some-related-long-er-term-projects"><h4><span class="secno">3.4.1 </span>Some related long(er) term projects</h4><ul>
+<li>Add APIs to user agents to ease testing (e.g. reftests could be automated if user agents were able to take screenshots).</li>
+<li>Add APIs to automate QoI issues (e.g. measuring frame rates when scrolling or during effects).</li>
+<li>Rely on WebDriver for functional testing (notably instrumenting applications for high level platform testing).</li>
+</ul></section></section></section><section class="appendix" id="stakeholders"><!--OddPage--><h2><span class="secno">A. </span>Stakeholders</h2><p>Testing the Open Web Platform has numerous and diverse stakeholders. Some are W3C member. Some not. They will need to be consulted regularly during the various stages of this plan, and their requirements and needs will be taken in consideration in order to develop solutions that provide the most value to all.
+
+</p><p>As a starting point, here's a list of key stakeholders and how their interests relate to this testing effort.
+
+</p><section id="implementors"><h3><span class="secno">A.1 </span>Implementors</h3><p>In order to develop tests that are meaningful, it is key to get implementors involved and to make sure they are able to easily run these tests on their own builds and contribute to them.
+
+</p><p>Ideally, developing tests in parallel with implementation and spec work would enable creating virtuous feedback loops helping refine specs and make implementations better and more interoperable.
+
+</p><p>Provided sufficient quality and traction tests can also be used to push implementors into investing resources to fix issues.
+
+</p><p>Relying on open-source test suites should also lighten the burden for implementors.
+
+</p><p>Finally, some implementors may decide to use their test results to promote their browsers to device manufacturers and end users.
+
+</p></section><section id="hardware-manufacturers"><h3><span class="secno">A.2 </span>Hardware manufacturers</h3><p>With the move to mobile (and soon, TV, automotive, etc) and the increase in device capabilities of user agents, hardware manufacturers (including chip-makers) are increasingly involved in the integration process, so they are very keen to not only be able to test conformance, but also quality of implementation. Furthermore, hardware manufacturers, especially in the mobile industry, see their devices tested by their customers (operators). Being able to share code for this would ease certification processes.
+
+</p></section><section id="operators"><h3><span class="secno">A.3 </span>Operators</h3><ul>
+<li>Use testing essentially for certification purposes.</li>
+<li>Need ways to run tests without leaking results or data about the tested device (very strict agreements with hardware manufacturers for non released devices).</li>
+<li>Test runner will need an incognito mode that doesn't log anything and/or the ability to be able to run on dedicated hardware.</li>
+<li>Operators are essentially concerned about the end-user experience, so have requirements which go beyond conformance and into QoI testing. </li>
+</ul></section><section id="developers-aka-authors"><h3><span class="secno">A.4 </span>Developers (aka Authors)</h3><p>Developers are of essentially two kinds: 1) big players, some of which are also implementors, and 2) long tail developers. The latter category is underrepresented at W3C which is a shame, as they make or break platforms.
+
+</p><p>Developers want:
+
+</p><ul>
+<li>better interoperability,</li>
+<li>to understand which features are supported where,</li>
+<li>not to lose time on implementation bugs, </li>
+<li>to put pressure on implementors (e.g. by writing a regression test or by making it fail a W3C test suite it was previously passing, etc.).</li>
+</ul><p>Developers are probably one of the best if not the best category of stakeholders to crowd-source tests from (as shown by efforts such as <a href="http://testthewebforward.org/">Test The Web Forward</a>).
+
+</p></section><section id="w3c-groups"><h3><span class="secno">A.5 </span>W3C Groups</h3><p>The concern here is mainly about not adding overhead to the spec editing process which is already understaffed.
+
+</p><p>There are also specific requirements with certain groups, notably the CSS WG and its Sheperd project, that must be taken in account.
+
+</p><p>Ideally, the testing effort can help WG get earlier feedback on spec issues by both implementors and developers.
+
+</p></section><section id="open-source-projects-test-suites-etc."><h3><span class="secno">A.6 </span>Open-source projects, test suites, etc.</h3><p>These include device description repositories such as <a href="http://wurfl.sourceforge.net/">WURFL</a>, compatibility tables such as <a href="http://caniuse.com/">caniuse.com</a>, mobile test-suites such as <a href="http://rng.io/">Ringmark</a>, etc.
+
+</p><p>A lot of projects are writing and running their own tests to find out whether or not a given feature is supported by a user agent. Providing an easy way for such services to piggy-back on W3C tests and test results would allow them to deliver more consistent and up to date information and concentrate on the added value they bring to their particular audiences.
+
+</p></section><section id="different-industry-segments"><h3><span class="secno">A.7 </span>Different industry segments</h3><p>For example, the automotive industry or the banking industry might have specific security requirements.
+
+</p></section><section id="end-users"><h3><span class="secno">A.8 </span>End users</h3><p>Last but not least, end users are at the heart of our concerns. End users care about avoiding vendor lock-ins, having portable applications and data, being able to easily access a variety of content online, etc. all of which are helped by standards conformance.
+
+</p><p>Providing end-users with tests results would enable them to choose browsers and/or devices based how well they implement standards.
+</p></section></section></body></html>
